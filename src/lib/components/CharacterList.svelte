@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { createEventDispatcher, type EventDispatcher } from "svelte";
+
     import CharacterLine from "$lib/components/CharacterLine.svelte";
     import computeContrastRatio from "$lib/functions/computeConstrastRatio";
     import {
@@ -8,10 +10,14 @@
         type Line,
     } from "$lib/types/character";
 
+    let dispatcher: EventDispatcher<Record<string, any>> =
+        createEventDispatcher();
+
     let characters: Character[] = [];
     let selectedCharacter: number | null = null;
 
     $: currentCharacter = characters[selectedCharacter ?? -1];
+    $: dispatcher("charactersUpdated", characters);
 
     const addNewLine = (name: string) => {
         const characterIndex = characters.findIndex((c) => c.name === name);
@@ -38,16 +44,23 @@
         const lineIndex = currentCharacter.lines.findIndex(
             (l) => l.name === e.detail.name,
         );
+
         currentCharacter.lines = currentCharacter.lines.with(
             lineIndex,
             e.detail,
         );
+
+        const characterIndex = characters.findIndex(c => c.name === currentCharacter.name);
+        characters = characters.with(characterIndex, currentCharacter);
     };
 
     const removeLine = (e: CustomEvent<string>): void => {
         currentCharacter.lines = currentCharacter.lines.filter(
             (l) => l.name !== e.detail,
         );
+
+        const characterIndex = characters.findIndex(c => c.name === currentCharacter.name);
+        characters = characters.with(characterIndex, currentCharacter);
     };
 </script>
 

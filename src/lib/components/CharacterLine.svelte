@@ -1,51 +1,26 @@
 <script lang="ts">
-    import { createEventDispatcher, type EventDispatcher } from "svelte";
-    import { type Line } from "$lib/types/character";
+    import { createEventDispatcher, type EventDispatcher } from 'svelte';
 
     export let lineName: string;
 
-    let dispatcher: EventDispatcher<Record<string, any>> =
-        createEventDispatcher();
+    let dispatcher: EventDispatcher<Record<string, any>> = createEventDispatcher();
 
-    let startTimecode: string;
-    let speech: string;
-    let endTimecode: string;
+    let startTimecode: string = '00:00:00.000';
+    let speech: string = '';
+    let endTimecode: string = '00:00:00.000';
 
-    const updateCharacterLine = () => {
-        dispatcher("update", {
-            name: lineName,
-            start: startTimecode,
-            speech,
-            end: endTimecode,
-        } as Line);
-    };
-    const deleteCharacterLine = (
-        event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement },
-    ) => {
-        dispatcher("delete", lineName);
+    $: dispatcher('update', { name: lineName, start: startTimecode, speech, end: endTimecode });
+
+    const deleteCharacterLine = (event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) => {
+        dispatcher('delete', lineName);
     };
 </script>
 
 <div class="character-line">
-    <input
-        type="time"
-        step="0.001"
-        bind:value={startTimecode}
-        on:change={() => updateCharacterLine}
-    />
-    <input
-        type="text"
-        placeholder="Monologue"
-        bind:value={speech}
-        on:change={() => updateCharacterLine}
-    />
-    <input
-        type="time"
-        step="0.001"
-        bind:value={endTimecode}
-        on:change={() => updateCharacterLine}
-    />
-    <button on:click={deleteCharacterLine}>🚮</button>
+    <input type="time" step="0.01" bind:value="{startTimecode}" />
+    <input type="text" placeholder="Monologue" bind:value="{speech}" />
+    <input type="time" step="0.01" bind:value="{endTimecode}" />
+    <button on:click="{deleteCharacterLine}">🚮</button>
 </div>
 
 <style>

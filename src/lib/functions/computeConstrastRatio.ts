@@ -37,7 +37,6 @@ const computeRelativeLuminance = (red: string, green: string, blue: string) => {
     const GsRGB = convertHexaToDec(green) / 255;
     const BsRGB = convertHexaToDec(blue) / 255;
 
-    console.log(RsRGB, GsRGB, BsRGB)
     const R = RsRGB <= RELATIVE_LUMINANCE_THRESHOLD_CONST ? computeColorIfBelowOrEqual(RsRGB) : computeColorIfAbove(RsRGB);
     const G = GsRGB <= RELATIVE_LUMINANCE_THRESHOLD_CONST ? computeColorIfBelowOrEqual(GsRGB) : computeColorIfAbove(GsRGB);
     const B = BsRGB <= RELATIVE_LUMINANCE_THRESHOLD_CONST ? computeColorIfBelowOrEqual(BsRGB) : computeColorIfAbove(BsRGB);
@@ -62,8 +61,6 @@ const computeContrastRatio = (lightColor: string, darkColor: string) => {
     const L1 = computeRelativeLuminance(lRed, lGreen, lBlue);
     const L2 = computeRelativeLuminance(dRed, dGreen, dBlue);
 
-    console.log(`${lRed}${lGreen}${lBlue}`)
-    console.log(`${dRed}${dGreen}${dBlue}`)
     return ((L1 + 0.05) / (L2 + 0.05));
 }
 

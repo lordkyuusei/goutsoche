@@ -12,6 +12,7 @@ export type Line = {
     start: string,
     end: string,
     speech: string,
+    htmlElement?: HTMLLIElement
 }
 
 export const createNewLine = () => ({

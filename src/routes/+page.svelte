@@ -1,17 +1,24 @@
 <script lang="ts">
     import CharacterList from "$lib/components/CharacterList.svelte";
     import Video from "$lib/components/Video.svelte";
+    import type { Character } from "$lib/types/character";
+
+    let characters: Character[] = [];
+
+    const onCharactersUpdated = (e: CustomEvent<Character[]>): void => {
+        characters = e.detail;        
+    }
 </script>
 
 <section>
     <div id="texts">
         <h1>Ecriture</h1>
-        <CharacterList></CharacterList>
+        <CharacterList on:charactersUpdated={onCharactersUpdated}></CharacterList>
     </div>
     <hr />
     <div id="render">
         <h1>Montage</h1>
-        <Video></Video>
+        <Video {characters}></Video>
     </div>
 </section>
 
