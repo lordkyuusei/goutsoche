@@ -1,0 +1,1 @@
+export type GridConfiguration = 'left-configuration' | 'center-configuration' | 'right-configuration';

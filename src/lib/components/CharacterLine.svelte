@@ -7,7 +7,7 @@
 
     let startTimecode: string = '00:00:00.000';
     let speech: string = '';
-    let endTimecode: string = '00:00:00.000';
+    let endTimecode: string = '00:00:03.000';
 
     $: dispatcher('update', { name: lineName, start: startTimecode, speech, end: endTimecode });
 
@@ -26,7 +26,7 @@
 <style>
     .character-line {
         display: grid;
-        grid-template: 100% / 0.25fr 1fr 0.25fr auto;
+        grid-template: 100% / auto 1fr auto min-content;
         gap: var(--small-gap);
     }
 </style>
