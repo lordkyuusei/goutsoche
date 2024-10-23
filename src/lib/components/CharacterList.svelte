@@ -42,7 +42,7 @@
             confirmText: 'Oui',
             confirmCallback: () => {
                 characters = characters.filter((c) => c.name !== currentChar.name);
-                selectedCharacter = null;
+                selectedCharacter = 0;
                 $modalInfo.isOpen = false;
             },
             cancelCallback: () => {
@@ -71,12 +71,11 @@
 </script>
 
 <header>
-    <h1>Ecriture</h1>
-    <button on:click="{addNewCharacter}">Ajouter un personnage</button>
+    <button on:click="{addNewCharacter}">+ Personnage</button>
 </header>
 
 <ul id="character-list">
-    {#each characters as character, i}
+    {#each characters as character (character.name)}
         <li class="character-element">
             <button
                 on:click="{() => setCharacter(character.name)}"
@@ -108,6 +107,7 @@
         display: grid;
         grid-template-columns: 1fr auto;
         gap: var(--small-gap);
+        margin-bottom: var(--normal-gap);
     }
 
     ul#character-list {
@@ -118,7 +118,9 @@
         align-items: start;
 
         margin: 0;
-        padding: 0;
+        border-radius: var(--small-gap);
+        padding: var(--small-gap);
+        background-color: var(--bg-100);
 
         & > li.character-element {
             list-style: none;
@@ -136,7 +138,7 @@
         gap: var(--small-gap);
         padding: var(--small-gap);
         border-radius: var(--tiny-gap);
-        background: var(--bg-high-color);
+        background: var(--bg-100);
 
         & > input {
             height: 100%;
@@ -144,7 +146,7 @@
         }
 
         & > button {
-            background-color: red;
+            background-color: var(--bg-300);
         }
 
     }
@@ -159,6 +161,6 @@
         height: 100%;
         overflow-y: auto;
         border-radius: var(--tiny-gap);
-        background: var(--bg-high-color);
+        background: var(--bg-100);
     }
 </style>

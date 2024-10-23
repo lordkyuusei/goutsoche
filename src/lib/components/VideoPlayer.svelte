@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount } from 'svelte';
+    import FileInput from './utils/FileInput.svelte';
 
     export let currentTime: number = 0;
     export let currentDuration: number = 0;
 
-    let files: FileList;
     let chosenFile: File | null = null;
 
     let mediaSource: MediaSource;
@@ -13,8 +13,9 @@
     let videoSource: HTMLVideoElement;
     let videoIsPlaying: boolean = false;
 
-    const loadVideo = async () => {
-        chosenFile = files[0];
+    const loadVideo = async (e: CustomEvent<{ file: File }>) => {
+        console.log(e.detail);
+        chosenFile = e.detail.file;
 
         const url = URL.createObjectURL(mediaSource);
         videoSource.src = url;
@@ -78,10 +79,11 @@
     });
 </script>
 
-<header>
-    <h1>Vidéo</h1>
-    <input type="file" bind:files maxlength="1" on:change="{loadVideo}" />
-</header>
+{#if !chosenFile}
+    <header>
+        <FileInput on:videoLoad="{loadVideo}"></FileInput>
+    </header>
+{/if}
 
 <div id="video-player" class:hidden="{!chosenFile}">
     <video id="video-source" bind:this="{videoSource}" bind:currentTime bind:duration="{currentDuration}">
@@ -119,15 +121,16 @@
         grid-template-columns: 1fr auto;
         gap: var(--small-gap);
     }
-    &.hidden {
-        display: none;
-    }
 
+    
     div#video-player {
         display: grid;
         grid-template: 100% / 100%;
         align-items: end;
-
+        
+        &.hidden {
+            display: none;
+        }
         & > video#video-source,
         & > ul#video-controls {
             grid-area: 1 / 1;

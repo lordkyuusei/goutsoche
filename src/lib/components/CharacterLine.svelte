@@ -29,4 +29,8 @@
         grid-template: 100% / auto 1fr auto min-content;
         gap: var(--small-gap);
     }
+
+    button {
+        background-color: var(--bg-300);
+    }
 </style>
