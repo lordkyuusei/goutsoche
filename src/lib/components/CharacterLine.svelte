@@ -1,25 +1,21 @@
 <script lang="ts">
+    import { browser } from '$app/environment';
+    import type { Line } from '$lib/types/character';
     import { createEventDispatcher, type EventDispatcher } from 'svelte';
 
-    export let lineName: string;
+    export let line: Line;
 
     let dispatcher: EventDispatcher<Record<string, any>> = createEventDispatcher();
 
-    let startTimecode: string = '00:00:00.000';
-    let speech: string = '';
-    let endTimecode: string = '00:00:03.000';
-
-    $: dispatcher('update', { name: lineName, start: startTimecode, speech, end: endTimecode });
-
     const deleteCharacterLine = (event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) => {
-        dispatcher('delete', lineName);
+        dispatcher('delete', line.name);
     };
 </script>
 
 <div class="character-line">
-    <input type="time" step="0.01" bind:value="{startTimecode}" />
-    <input type="text" placeholder="Monologue" bind:value="{speech}" />
-    <input type="time" step="0.01" bind:value="{endTimecode}" />
+    <input type="time" step="0.01" bind:value="{line.start}" on:input="{() => dispatcher('update', line)}"/>
+    <input type="text" placeholder="Ligne de texte" bind:value="{line.speech}" on:input="{() => dispatcher('update', line)}" />
+    <input type="time" step="0.01" bind:value="{line.end}" on:input="{() => dispatcher('update', line)}" />
     <button on:click="{deleteCharacterLine}">🚮</button>
 </div>
 

@@ -43,6 +43,11 @@ input {
 }
 
 button {
+    display: grid;
+    grid-auto-columns: auto;
+    grid-auto-flow: column;
+    gap: var(--small-gap);
+
     &:hover {
         background-color: var(--main-color);
         color: var(--bg-100);
@@ -63,4 +68,16 @@ li {
 
 h1 {
     margin: 0;
+}
+
+dialog {
+    padding: var(--normal-gap);
+    color: var(--fg-color);
+    border-color: var(--bg-100);
+    border-radius: var(--tiny-gap);
+    background-color: var(--bg-200);
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg);}
 }

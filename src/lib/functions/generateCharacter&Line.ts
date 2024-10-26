@@ -4,9 +4,9 @@ import { generateName } from "./generateName";
 
 export const createNewLine = (): Line => ({
     name: crypto.randomUUID(),
-    start: '',
+    start: '00:00:00.000',
     speech: '',
-    end: '',
+    end: '00:00:03.000',
 });
 
 export const createNewCharacter = (): Character => ({

@@ -1,21 +1,28 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { createEventDispatcher, onMount } from 'svelte';
     import FileInput from './utils/FileInput.svelte';
 
     export let currentTime: number = 0;
     export let currentDuration: number = 0;
-
-    let chosenFile: File | null = null;
-
+    export let file: File;
+    
+    let chosenFile: File | null = null
     let mediaSource: MediaSource;
     let sourceBuffer: SourceBuffer;
-
+    
     let videoSource: HTMLVideoElement;
     let videoIsPlaying: boolean = false;
+    
+    let dispatcher = createEventDispatcher();
 
-    const loadVideo = async (e: CustomEvent<{ file: File }>) => {
-        console.log(e.detail);
-        chosenFile = e.detail.file;
+    $: if (file && !chosenFile) {
+        console.log(file);
+        loadVideo(file);
+    }
+
+    const loadVideo = async (loadedFile: File) => {
+        chosenFile = loadedFile;
+        dispatcher('onVideoLoad', chosenFile);
 
         const url = URL.createObjectURL(mediaSource);
         videoSource.src = url;
@@ -81,7 +88,7 @@
 
 {#if !chosenFile}
     <header>
-        <FileInput on:videoLoad="{loadVideo}"></FileInput>
+        <FileInput on:videoLoad="{(e) => loadVideo(e.detail.file)}"></FileInput>
     </header>
 {/if}
 

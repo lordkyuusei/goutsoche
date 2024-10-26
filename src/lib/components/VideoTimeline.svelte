@@ -33,7 +33,6 @@
     const getTextScaling = (speechLength: number, liElement: HTMLLIElement | null) => {
         if (!liElement) return 1;
 
-        console.log(speechLength, liElement.offsetWidth)
         return speechLength / liElement.offsetWidth;
     };
 </script>
@@ -79,6 +78,8 @@
         & > ul#timeline-characters {
             display: grid;
             grid-auto-rows: 1fr;
+            height: 100%;
+            overflow: auto;
 
             & > li.character-row {
                 color: var(--bg-color);

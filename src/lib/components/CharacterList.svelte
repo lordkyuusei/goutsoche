@@ -4,16 +4,14 @@
     import CharacterLine from '$lib/components/CharacterLine.svelte';
     import { type Character, type Line } from '$lib/types/character';
     import { createNewCharacter, createNewLine } from '$lib/functions/generateCharacter&Line';
-    import isModalOpen from '$lib/store/modal';
     import modalInfo from '$lib/store/modal';
 
-    let dispatcher: EventDispatcher<Record<string, any>> = createEventDispatcher();
+    export let characters: Character[] = [];
 
-    let characters: Character[] = [];
-    let selectedCharacter: number | null = null;
+    let selectedCharacter: number = characters.length - 1;
+    let dispatcher = createEventDispatcher();
 
-    $: currentChar = characters[selectedCharacter ?? -1];
-    $: dispatcher('charactersUpdated', characters);
+    $: currentChar = characters[selectedCharacter] ?? null;
 
     const addNewLine = (name: string) => {
         const characterIndex = characters.findIndex((c) => c.name === name);
@@ -25,11 +23,13 @@
             ...characterRef,
             lines: [...characterRef.lines, createNewLine()],
         });
+        dispatcher('charactersUpdated', characters);
     };
 
     const addNewCharacter = () => {
         characters = [...characters, createNewCharacter()];
         selectedCharacter = characters.length - 1;
+        dispatcher('charactersUpdated', characters);
     };
 
     const removeCharacter = () => {
@@ -42,13 +42,14 @@
             confirmText: 'Oui',
             confirmCallback: () => {
                 characters = characters.filter((c) => c.name !== currentChar.name);
+                dispatcher('charactersUpdated', characters);
                 selectedCharacter = 0;
                 $modalInfo.isOpen = false;
             },
             cancelCallback: () => {
                 $modalInfo.isOpen = false;
-            }
-        }
+            },
+        };
     };
 
     const setCharacter = (name: string) => (selectedCharacter = characters.findIndex((x) => x.name === name) ?? null);
@@ -60,6 +61,7 @@
 
         const characterIndex = characters.findIndex((c) => c.name === currentChar.name);
         characters = characters.with(characterIndex, currentChar);
+        dispatcher('charactersUpdated', characters);
     };
 
     const removeLine = (e: CustomEvent<string>): void => {
@@ -67,6 +69,7 @@
 
         const characterIndex = characters.findIndex((c) => c.name === currentChar.name);
         characters = characters.with(characterIndex, currentChar);
+        dispatcher('charactersUpdated', characters);
     };
 </script>
 
@@ -86,17 +89,22 @@
     {/each}
 </ul>
 
-{#if selectedCharacter !== null}
+{#if currentChar !== null}
     <div id="character-info">
-        <input title="Nom du personnage" type="text" id="character-{currentChar.name}" bind:value="{currentChar.name}" />
+        <input
+            title="Nom du personnage"
+            type="text"
+            id="character-{currentChar.name}"
+            bind:value="{currentChar.name}"
+        />
         <input title="Couleur du texte" type="color" bind:value="{currentChar.foreground}" />
         <input title="Couleur du fond" type="color" bind:value="{currentChar.background}" />
-        <button title="Supprimer" type="button" on:click={removeCharacter}>X</button>
+        <button title="Supprimer" type="button" on:click="{removeCharacter}">X</button>
     </div>
 
     <div id="character-lines">
         {#each currentChar.lines as line (line.name)}
-            <CharacterLine lineName="{line.name}" on:update="{updateLine}" on:delete="{removeLine}"></CharacterLine>
+            <CharacterLine {line} on:update="{updateLine}" on:delete="{removeLine}"></CharacterLine>
         {/each}
     </div>
     <button on:click="{() => addNewLine(currentChar.name)}">Ajouter une ligne</button>
@@ -114,7 +122,7 @@
         display: grid;
         grid-auto-flow: column;
         grid-auto-columns: min-content;
-        overflow-x: auto;      
+        overflow-x: auto;
         align-items: start;
 
         margin: 0;
@@ -148,7 +156,6 @@
         & > button {
             background-color: var(--bg-300);
         }
-
     }
 
     div#character-lines {

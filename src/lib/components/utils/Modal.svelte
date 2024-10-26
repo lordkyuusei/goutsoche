@@ -17,7 +17,7 @@
     <p>{modalInfo.description}</p>
     <form method="dialog">
         <button type="submit" class="cancel" on:click={cancelModal}>{modalInfo.cancelText}</button>
-        <button type="submit" class="cancel" on:click={confirmModal}>{modalInfo.confirmText}</button>
+        <button type="submit" class="confirm" on:click={confirmModal}>{modalInfo.confirmText}</button>
     </form>
 </dialog>
 
@@ -26,5 +26,11 @@
         position: absolute;
         top: 30%;
         z-index: 2;
+
+        & > form {
+            display: grid;
+            grid-auto-flow: column;
+            gap: var(--normal-gap);
+        }
     }
 </style>
